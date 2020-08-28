@@ -82,7 +82,7 @@ class CasePage:
         :param case_name: 案件名称
         :return: 案件元素对象
         """
-        value = f"//div[contains(@style, 'display: flex;')]//div[@class='folder_wrap']/span[text()='{case_name}']"
+        value = f"//div[@class='case_list']//div[contains(@class, 'menu_item')]//span[text()='{case_name}']"
         element = api.find_element(self.browser, 'xpath', value)
         return element
 
@@ -107,7 +107,11 @@ class CasePage:
 
     @staticmethod
     def folder_name_input(parent):
-        """"""
+        """
+        文件夹名称输入框
+        :param parent:
+        :return:
+        """
         value = ".//input[@type='text']"
         element = api.find_element(parent, value=value)
         return element
@@ -174,7 +178,7 @@ class CasePage:
 
     def case_tab(self, tab_name):
         """
-        通过名称定位案件tab标签页：案件列表、处理中案件、案件回收站
+        通过名称定位案件tab标签页：案件列表、处理中案件、回收站
         :param tab_name: 标签页名称
         :return: 标签页元素对象
         """
@@ -225,15 +229,6 @@ class CasePage:
         element = api.find_element(self.browser, value=value)
         return element
 
-    def add_material_sample(self, button_name):
-        """
-        【添加检材】【添加样本】按钮
-        :return: 【添加检材】【添加样本】按钮元素
-        """
-        value = f"//div[contains(@title, '{button_name}')]/i"
-        element = api.find_element(self.browser, 'xpath', value)
-        return element
-
     def unfold_and_hide_case_button(self):
         """
         案件【展开】【隐藏】按钮
@@ -266,16 +261,45 @@ class CasePage:
         return element
 
     @staticmethod
-    def audio_info(parent, info_name):
+    def audio_info(parent, field_name):
         """
         获取音频相关信息
         :param parent: 音频信息窗口
-        :param info_name: 音频信息字段名
+        :param field_name: 音频信息字段名
         :return: 音频信息元素对象
         """
-        info_name = info_name.upper()
+        info_name = field_name.upper()
         value = f".//div[@class='file-details']//p/span[contains(text(), '{info_name}')]/following-sibling::span"
         element = api.find_element(parent, 'xpath', value)
+        return element
+
+    @staticmethod
+    def material_drop_down_box(parent):
+        """
+        导出案件受理记录窗口，检材音频下拉框按钮
+        :param parent:
+        :return:
+        """
+        value = ".//label[text()='检材音频：']/following-sibling::span/i"
+        element = api.find_element(parent, value=value)
+        return element
+
+    @staticmethod
+    def sample_drop_down_box(parent):
+        """
+        导出案件受理记录窗口，样本音频下拉框按钮
+        :param parent:
+        :return:
+        """
+        value = ".//label[text()='样本音频：']/following-sibling::span/i"
+        element = api.find_element(parent, value=value)
+        return element
+
+    @staticmethod
+    def window_check_folder(parent, folder_name):
+        """"""
+        value = f".//div[contains(@class, 'ant-cascader-menus')]//ul/li[text()='{folder_name}']"
+        element = api.find_element(parent, value=value)
         return element
 
 

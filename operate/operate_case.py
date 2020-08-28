@@ -168,7 +168,7 @@ class OperateCase:
         :param case_name:
         :return: None
         """
-        case = self.case_page.folder_name(case_name)
+        case = self.case_page.find_case(case_name)
         self.context_menu_operate(case, button_name='删除案件')
         time.sleep(1)
         prompt_window = api.level_2_window(self.browser)
@@ -247,7 +247,7 @@ class OperateCase:
         ActionChains(self.browser).move_to_element(target_element_object).context_click(target_element_object).perform()
         time.sleep(1)
         # 点击右键菜单中的按钮
-        self.case_page.case_context_menu(button_name).click()
+        self.case_page.file_context_menu(button_name).click()
 
     def add_file(self, case_name, file_path, file_type='常见格式'):
         """"""
@@ -265,35 +265,6 @@ class OperateCase:
         time.sleep(2)
         self.case_page.window_button(level_2_window, "确 定").click()
         time.sleep(1)
-
-    def upload_audio_file(self, file_path, operate_type='添加检材', file_type='常见格式'):
-        # 选择是【添加检材】还是【添加样本】
-        self.case_page.add_material_sample(operate_type).click()
-        level_2_window = api.level_2_window(self.browser)
-        self.case_page.file_format_radio_button(level_2_window, file_type).click()
-        self.case_page.window_button(level_2_window, "浏 览").click()
-        api.import_file(file_path, '打开')
-        if file_type != 'Wavf':
-            self.case_page.window_button(level_2_window, '开始转换').click()
-            time.sleep(2)
-        self.case_page.window_button(level_2_window, "开始上传").click()
-        time.sleep(2)
-        self.case_page.window_button(level_2_window, "确 定").click()
-
-    def add_sample(self, file_path, file_type='常见格式'):
-        self.case_page.add_material_sample('添加样本').click()
-        level_2_window = api.level_2_window(self.browser)
-        file_type = file_type.title()
-        self.case_page.file_format_radio_button(level_2_window, file_type).click()
-        self.case_page.window_button(level_2_window, "浏 览").click()
-        api.import_file(file_path, '打开')
-        time.sleep(1)
-        if file_type != 'Wavf':
-            self.case_page.window_button(level_2_window, '开始转换').click()
-            time.sleep(2)
-        self.case_page.window_button(level_2_window, "开始上传").click()
-        time.sleep(2)
-        self.case_page.window_button(level_2_window, "确 定").click()
 
     def find_file(self, folder_name, file_name):
         """

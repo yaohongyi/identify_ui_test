@@ -96,7 +96,7 @@ class TestCase:
         case_name = file_path.split('\\')[-1][:-4]
         window_name = data.get('window_name')
         operate_case.import_case(file_path, window_name)
-        time.sleep(3)
+        time.sleep(5)
         test_result = operate_case.find_case(case_name)
         assert test_result
 
@@ -245,7 +245,7 @@ class TestCase:
         operate_case.del_case(case_name)
         time.sleep(1)
         # 进入案件回收站
-        operate_case.switch_tab('案件回收站')
+        operate_case.switch_tab('回收站')
         time.sleep(1)
         # 进行搜索
         operate_case.search_case(key_word)
@@ -278,7 +278,7 @@ class TestCase:
         operate_case.del_case(case_name)
         time.sleep(1)
         # 进入案件回收站
-        operate_case.switch_tab('案件回收站')
+        operate_case.switch_tab('回收站')
         time.sleep(1)
         # 选中案件进行案件还原
         operate_case.selected_case(case_name)
@@ -300,7 +300,7 @@ class TestCase:
         operate_case.del_case(case_name)
         time.sleep(1)
         # 进入案件回收站
-        operate_case.switch_tab('案件回收站')
+        operate_case.switch_tab('回收站')
         time.sleep(1)
         # 案件彻底删除
         operate_case.selected_case(case_name)
@@ -313,7 +313,7 @@ class TestCase:
     def test_upload_wav(self, init_test_case):
         operate_case, operate_view = init_test_case
         # 读取excel数据
-        data = api.read_excel('test_add_wav')
+        data = api.read_excel('test_upload_wav')
         file_path = data.get('file_path')
         assert_result = data.get('assert_result')
         # 新建案件
