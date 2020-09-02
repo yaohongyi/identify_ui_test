@@ -149,16 +149,25 @@ class TestCase:
         # 新建案件
         case_name = api.create_case_name()
         operate_case.add_case(case_name)
-        file_path = data.get('file_path')
-        operate_case.add_file(case_name, file_path)
+        # 新建检材文件夹，并上传音频
+        operate_case.add_folder(case_name, '检材')
+        time.sleep(0.5)
+        operate_case.click_unfold_or_hide(case_name)
+        file_path = data.get('material_audio')
+        operate_case.add_file('检材', file_path)
+        # 新建样本文件夹，并上传音频
+        operate_case.add_folder(case_name, '样本')
+        time.sleep(0.5)
+        file_path = data.get('sample_audio')
+        operate_case.add_file('样本', file_path)
         # 切换到案件列表标签页
         operate_case.switch_tab('案件列表')
         # 导出案件受理记录
         export_path = data.get('export_path')
+        file_name = export_path + os.path.sep + f"案件《{case_name}》受理记录.docx"
         export_window_name = data.get('export_window_name')
-        operate_case.export_case_accept_record(case_name, export_path, export_window_name)
+        operate_case.export_case_accept_record(case_name, file_name, export_window_name)
         # 断言
-        file_name = export_path + "\\" + f"案件《{case_name}》受理记录.docx"
         test_result = os.path.exists(file_name)
         assert test_result
         api.remove_doc(export_path)

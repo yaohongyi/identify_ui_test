@@ -187,7 +187,7 @@ def import_file(file_path, window_name='导入案件'):
 
 # 导出
 def export_file(file_path, window_name='导出案件'):
-    time.sleep(5)
+    time.sleep(2)
     dialog = win32gui.FindWindow('#32770', window_name)
     combo_box_ex32 = win32gui.FindWindowEx(dialog, 0, 'ComboBoxEx32', None)
     combo_box = win32gui.FindWindowEx(combo_box_ex32, 0, 'ComboBox', None)
@@ -195,6 +195,7 @@ def export_file(file_path, window_name='导出案件'):
     button = win32gui.FindWindowEx(dialog, 0, 'Button', None)
     win32gui.SendMessage(edit, win32con.WM_SETTEXT, None, file_path)
     win32gui.SendMessage(dialog, win32con.WM_COMMAND, 1, button)
+    time.sleep(8)
 
 
 def prompt_message(browser):

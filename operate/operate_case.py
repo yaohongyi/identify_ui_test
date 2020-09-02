@@ -117,8 +117,37 @@ class OperateCase:
         # 点击右键菜单中的按钮
         self.case_page.case_context_menu(button_name).click()
 
-    def add_folder(self, target_object, folder_name):
-        ...
+    def add_folder(self, parent_folder_name, folder_name):
+        """
+        新增子文件夹
+        :param parent_folder_name: 父文件夹
+        :param folder_name: 子文件夹名称
+        :return:
+        """
+        parent_folder = self.case_page.folder_name(parent_folder_name)
+        self.context_menu_operate(parent_folder, '新建文件夹')
+        add_folder_window = api.level_2_window(self.browser)
+        self.case_page.folder_name_input(add_folder_window).send_keys(folder_name)
+        self.case_page.window_button(add_folder_window, '确认').click()
+
+    def click_material_drop_down_box(self):
+        level_2_window = api.level_2_window(self.browser)
+        self.case_page.material_drop_down_box(level_2_window).click()
+
+    def click_sample_drop_down_box(self):
+        level_2_window = api.level_2_window(self.browser)
+        self.case_page.sample_drop_down_box(level_2_window).click()
+
+    def choose_folder(self, folders: list):
+        """
+        选择弹出窗口上的文件夹
+        :param folders: 一级、二级....N级文件夹组成的列表
+        :return:
+        """
+        for folder in folders:
+            if folder:
+                self.case_page.location_folder(folder).click()
+                time.sleep(0.5)
 
     def rename_case(self, case_name, new_name):
         """
@@ -159,8 +188,17 @@ class OperateCase:
     def export_case_accept_record(self, case_name, file_path, window_name):
         """"""
         self.case_context_menu_operate(case_name, button_name='导出案件受理记录')
+        self.click_material_drop_down_box()
+        time.sleep(0.5)
+        self.choose_folder([case_name, '检材'])
+        time.sleep(0.5)
+        self.click_sample_drop_down_box()
+        time.sleep(0.5)
+        self.choose_folder([case_name, '样本'])
+        time.sleep(0.5)
+        level_2_window = api.level_2_window(self.browser)
+        api.level_window_button(level_2_window, '确认').click()
         api.export_file(file_path, window_name)
-        time.sleep(5)
 
     def del_case(self, case_name):
         """
@@ -249,10 +287,16 @@ class OperateCase:
         # 点击右键菜单中的按钮
         self.case_page.file_context_menu(button_name).click()
 
-    def add_file(self, case_name, file_path, file_type='常见格式'):
-        """"""
-        case = self.case_page.folder_name(case_name)
-        self.context_menu_operate(case, button_name='添加文件')
+    def add_file(self, folder_name, file_path, file_type='常见格式'):
+        """
+        给指定文件夹下上传音频文件
+        :param folder_name: 目标文件夹名称
+        :param file_path:
+        :param file_type:
+        :return:
+        """
+        folder = self.case_page.folder_name(folder_name)
+        self.context_menu_operate(folder, button_name='添加文件')
         level_2_window = api.level_2_window(self.browser)
         self.case_page.file_format_radio_button(level_2_window, file_type).click()
         self.case_page.window_button(level_2_window, "浏 览").click()
@@ -333,22 +377,6 @@ class OperateCase:
         audio_file = self.case_page.find_file(folder_name, audio_name)
         ActionChains(self.browser).double_click(audio_file).perform()
 
-    # def open_audio(self, folder_name, audio_name, window_index: int):
-    #     """
-    #     在指定的语谱图窗口
-    #     :param folder_name: 文件对象（可选：“检材”“样本”“我的图片”）
-    #     :param audio_name: 音频文件名称
-    #     :param window_index: 窗口序号
-    #     :return:
-    #     """
-    #     self.click_unfold_or_hide(folder_name)
-    #     time.sleep(1)
-    #     audio_file = self.case_page.find_file(folder_name, audio_name)
-    #     audio_file.click()
-    #     view_window = self.view_page.view_window(window_index)
-    #     time.sleep(1)
-    #     ActionChains(self.browser).move_to_element(audio_file).drag_and_drop(audio_file, view_window).perform()
-
 
 if __name__ == '__main__':
     import os
@@ -357,7 +385,7 @@ if __name__ == '__main__':
     operate_case = OperateCase(driver)
     try:
         operate_case.switch_tab('案件列表')
-        operate_case.open_case('2020年8月24日')
+        operate_case.export_case_accept_record('2020年9月1日', r'C:\Users\yaoch\Desktop', '导出案件受理记录')
         driver.quit()
     finally:
         os.system("taskkill /im 国音智能声纹鉴定专家系统.exe /f >nul 2>nul")

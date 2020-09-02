@@ -105,17 +105,6 @@ class CasePage:
         element = api.find_element(self.browser, 'xpath', value)
         return element
 
-    @staticmethod
-    def folder_name_input(parent):
-        """
-        文件夹名称输入框
-        :param parent:
-        :return:
-        """
-        value = ".//input[@type='text']"
-        element = api.find_element(parent, value=value)
-        return element
-
     def folder_name(self, folder_name):
         """
         处理中的案件，根据文件夹名称定位文件夹（案件名也属于文件夹）
@@ -295,10 +284,21 @@ class CasePage:
         element = api.find_element(parent, value=value)
         return element
 
+    def location_folder(self, folder_name):
+        """目标对象的存储文件夹"""
+        value = f"//div[contains(@class, 'ant-cascader-menus')]//ul/" \
+            f"li[not(contains(@class, 'active')) and text()='{folder_name}']"
+        element = api.find_element(self.browser, value=value)
+        if element.is_displayed() is False:
+            value = f"//div[contains(@class, 'ant-cascader-menus')]//ul/" \
+                f"li[not(contains(@class, 'active')) and text()='{folder_name}']"
+            element = api.find_elements(self.browser, value=value)[1]
+        return element
+
     @staticmethod
-    def window_check_folder(parent, folder_name):
-        """"""
-        value = f".//div[contains(@class, 'ant-cascader-menus')]//ul/li[text()='{folder_name}']"
+    def folder_name_input(parent):
+        """新建文件夹窗口的文件夹名称输入框"""
+        value = ".//span[text()='文件夹名称']/following-sibling::div/input"
         element = api.find_element(parent, value=value)
         return element
 
