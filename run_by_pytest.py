@@ -11,8 +11,8 @@ except FileNotFoundError:
     ...
 
 # 运行测试用例并生成测试结果数据
-create_report_command = 'pytest ./test_case/test_case.py'
-# create_report_command = 'pytest -q --alluredir report'  # 执行所有模块
+# create_report_command = 'pytest ./test_case/test_case.py -k test_case_recycle_del'
+create_report_command = 'pytest -q --alluredir report'  # 执行所有模块
 os.system(create_report_command)
 
 # 将测试结果数据转换为HTML报告

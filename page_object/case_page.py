@@ -76,24 +76,46 @@ class CasePage:
         element = api.find_element(parent, 'xpath', value)
         return element
 
-    def find_case(self, case_name):
+    def find_case_in_list(self, case_name):
         """
-        查找单个案件
+        查找案件列表的单个案件
         :param case_name: 案件名称
         :return: 案件元素对象
         """
-        value = f"//div[@class='case_list']//div[contains(@class, 'menu_item')]//span[text()='{case_name}']"
+        value = f"//div[@class='case_list']//div[@class='List']//div[contains(@class, 'menu_item')]//" \
+            f"span[text()='{case_name}']"
         element = api.find_element(self.browser, 'xpath', value)
         return element
 
-    def find_cases(self):
+    def find_cases_in_list(self, keyword):
         """
-        查找出列表所有案件
+        查找出案件列表所有案件
         :return: 所有案件元素对象组成的列表
         """
-        value = "//div[contains(@style, 'display: flex;')]//div[@class='folder_wrap']/span"
+        value = f"//div[@class='case_list']//div[@class='List']//" \
+            f"span[@class='normal_title' and contains(text(), '{keyword}')]"
         element = api.find_elements(self.browser, 'xpath', value)
         return element
+
+    def find_case_in_recycle(self, case_name):
+        """
+        在案件回收站中查找指定案件
+        :param case_name:
+        :return:
+        """
+        value = f"//div[@class='case_list']//span[text()='{case_name}']"
+        element = api.find_element(self.browser, value=value)
+        return element
+
+    def find_cases_in_recycle(self, keyword):
+        """
+        在案件回收站中查找所有案件
+        :param keyword:
+        :return:
+        """
+        value = f"//div[@class='case_list']//span[contains(text(), '{keyword}')]"
+        elements = api.find_elements(self.browser, value=value)
+        return elements
 
     def case_context_menu(self, button_name):
         """

@@ -64,22 +64,40 @@ class OperateCase:
         add_case_window = api.level_2_window(self.browser)
         self.case_page.window_button(add_case_window, button_name='取消').click()
 
-    def find_case(self, case_name):
+    def find_case_in_list(self, case_name):
         """
-        在列表中查找案件
+        在案件列表中查找案件
         :param case_name: 案件名
         :return: 案件查找结果：None或者案件元素对象
         """
-        case = self.case_page.find_case(case_name)
+        case = self.case_page.find_case_in_list(case_name)
         return case
 
-    def selected_case(self, case_name):
+    def find_case_in_recycle(self, case_name):
         """
-        在列表中选中案件
+        在案件回收站查找案件
+        :param case_name:
+        :return:
+        """
+        case = self.case_page.find_case_in_recycle(case_name)
+        return case
+
+    def selected_case_in_list(self, case_name):
+        """
+        在案件列表中选中案件
         :param case_name: 案件名称
         :return: None
         """
-        self.find_case(case_name).click()
+        self.find_case_in_list(case_name).click()
+        time.sleep(1)
+
+    def selected_case_in_recycle(self, case_name):
+        """
+        在回收站中选中案件
+        :param case_name: 案件名称
+        :return: None
+        """
+        self.find_case_in_recycle(case_name).click()
         time.sleep(1)
 
     def open_case(self, case_name):
@@ -88,7 +106,7 @@ class OperateCase:
         :param case_name: 案件名
         :return: None
         """
-        target_case = self.case_page.find_case(case_name)
+        target_case = self.case_page.find_case_in_list(case_name)
         target_case.click()
         target_case.click()
         time.sleep(1)
@@ -111,7 +129,7 @@ class OperateCase:
         :return: None
         """
         # 在指定案件上点击鼠标右键
-        target_case = self.find_case(case_name)
+        target_case = self.find_case_in_list(case_name)
         ActionChains(self.browser).move_to_element(target_case).context_click(target_case).perform()
         time.sleep(1)
         # 点击右键菜单中的按钮
@@ -206,12 +224,30 @@ class OperateCase:
         :param case_name:
         :return: None
         """
-        case = self.case_page.find_case(case_name)
+        # 执行删除操作
+        case = self.case_page.find_case_in_list(case_name)
         self.context_menu_operate(case, button_name='删除案件')
-        time.sleep(1)
+        time.sleep(0.5)
+        # 操作确认提示框点击【确定】
         prompt_window = api.level_2_window(self.browser)
         self.case_page.window_button(prompt_window, '确定').click()
-        time.sleep(1)
+        time.sleep(2)
+
+    def complete_del_case(self, case_name):
+        """
+        回收站，彻底删除案件
+        :param case_name:
+        :return: None
+        """
+        # 执行删除操作
+        case = self.case_page.find_case_in_recycle(case_name)
+        self.context_menu_operate(case, button_name='彻底删除')
+        time.sleep(0.5)
+        # 操作确认提示框点击【确定】
+        prompt_window = api.level_2_window(self.browser)
+        self.case_page.window_button(prompt_window, '确定').click()
+        time.sleep(2)
+
 
     def search_case(self, key_word):
         """
@@ -232,12 +268,20 @@ class OperateCase:
         time.sleep(0.5)
         self.case_page.case_button(button_name='搜索案件').click()
 
-    def search_result(self) -> list:
+    def search_result_in_list(self, keyword) -> list:
         """
-        定位案件列表所有案件元素
+        案件列表搜索案件
         :return: 所有案件元素对象
         """
-        case_element_list = self.case_page.find_cases()
+        case_element_list = self.case_page.find_cases_in_list(keyword)
+        return case_element_list
+
+    def search_result_in_recycle(self, keyword) -> list:
+        """
+        回收站搜索案件
+        :return: 所有案件元素对象
+        """
+        case_element_list = self.case_page.find_cases_in_recycle(keyword)
         return case_element_list
 
     def allocate_case_to_user(self, case_name, group_name, user_name):
