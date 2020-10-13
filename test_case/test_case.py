@@ -81,11 +81,11 @@ class TestCase:
         window_name = data.get('window_name')
         file_name = file_path + os.path.sep + case_name + ".spk"
         operate_case.export_case(case_name, file_name, window_name)
-        time.sleep(5)
+        time.sleep(3)
         test_result = os.path.exists(file_name)
         assert test_result
         # 还原测试环境，删除导出的案件
-        api.remove_spk(file_path)
+        api.remove_spk(file_name)
 
     @staticmethod
     def test_import_case(init_test_case):
@@ -166,7 +166,8 @@ class TestCase:
         export_path = data.get('export_path')
         file_name = export_path + os.path.sep + f"案件《{case_name}》受理记录.docx"
         export_window_name = data.get('export_window_name')
-        operate_case.export_case_accept_record(case_name, file_path, export_window_name)
+        operate_case.export_case_accept_record(case_name, file_name, export_window_name)
+        time.sleep(10)
         # 断言
         test_result = os.path.exists(file_name)
         assert test_result

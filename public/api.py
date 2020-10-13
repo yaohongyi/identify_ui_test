@@ -189,13 +189,12 @@ def import_file(file_path, window_name='导入案件'):
 def export_file(file_path, window_name='导出案件'):
     time.sleep(2)
     dialog = win32gui.FindWindow('#32770', window_name)
-    combo_box_ex32 = win32gui.FindWindowEx(dialog, 0, 'ComboBoxEx32', None)
-    combo_box = win32gui.FindWindowEx(combo_box_ex32, 0, 'ComboBox', None)
+    direct_uihwnd = win32gui.FindWindowEx(dialog, 0, 'DirectUIHWND', None)
+    combo_box = win32gui.FindWindowEx(direct_uihwnd, 0, 'ComboBox', None)
     edit = win32gui.FindWindowEx(combo_box, 0, 'Edit', None)
     button = win32gui.FindWindowEx(dialog, 0, 'Button', None)
     win32gui.SendMessage(edit, win32con.WM_SETTEXT, None, file_path)
     win32gui.SendMessage(dialog, win32con.WM_COMMAND, 1, button)
-    time.sleep(8)
 
 
 def prompt_message(browser):
@@ -245,19 +244,16 @@ def remove_doc(doc_path):
                 logging.warning(reason)
 
 
-def remove_spk(spk_path):
+def remove_spk(file_name):
     """
     还原测试环境，删除导出的案件（这里判断文件名称大于15个字符的就是导出的案件）
-    :param spk_path:
+    :param file_name:
     :return:
     """
-    file_list = os.listdir(spk_path)
-    for file in file_list:
-        if file.endswith('spk') and len(file) > 15:
-            try:
-                os.remove(spk_path + '\\' + file)
-            except (FileNotFoundError, PermissionError) as reason:
-                logging.warning(reason)
+    try:
+        os.remove(file_name)
+    except (FileNotFoundError, PermissionError) as reason:
+        logging.warning(reason)
 
 
 if __name__ == '__main__':
